@@ -283,7 +283,7 @@ def start_random_simulator(vk, user_id):
         show_simulator_menu(vk, user_id)
 
 
-# ==================== ПРИМЕРЫ ЗАДАЧ ====================
+# ==================== ПРИМЕРЫ ЗАДАЧ (ПОЛНЫЕ ВЕРСИИ) ====================
 def send_example_1(vk, user_id):
     text = """📱 Пример 1: Скидка на телефон
 
@@ -369,30 +369,58 @@ X = 840
     set_user_state(user_id, 'percentage_tasks', 'viewing_example')
 
 
-# ==================== УРОКИ ====================
+# ==================== УРОКИ (ПОЛНЫЕ ВЕРСИИ) ====================
 def send_lesson(vk, user_id, lesson_num):
     """Отправляет урок"""
     lessons = {
         1: """📖 Урок 1: Основные формулы
 
-p% от A = A × p / 100
-Если p% числа равны B, то A = B × 100 / p
-Сколько процентов B составляет от A: (B / A) × 100%""",
-
-        2: """📖 Урок 2: Нахождение процента
+Основные формулы процентов:
+1. p% от A = A × p / 100
+2. Если p% числа равны B, то A = B × 100 / p
+3. Сколько процентов B составляет от A: (B / A) × 100%
 
 Примеры:
-1) 8% от 50 = 50 × 8 / 100 = 4
-2) Число, если 12% = 36: 36 × 100 / 12 = 300
-3) 15 от 60 = (15/60) × 100% = 25%""",
+1) Найти 8% от 50: 50 × 8 / 100 = 4
+2) Найти число, если 12% от него равны 36: 36 × 100 / 12 = 300
+3) Найти, сколько процентов 15 составляет от 60: (15 / 60) × 100% = 25%""",
 
-        3: """📖 Урок 3: Изменение величины
+        2: """📖 Урок 2: Изменение величины
 
-Увеличение на p%: A × (1 + p/100)
-Уменьшение на p%: A × (1 - p/100)
+Формулы изменения величины:
+• Увеличение на p%: A × (1 + p/100)
+• Уменьшение на p%: A × (1 - p/100)
 
-Пример: Увеличить 200 на 15% = 200 × 1,15 = 230
-Уменьшить 200 на 15% = 200 × 0,85 = 170"""
+Примеры:
+1) Увеличить 200 на 15%: 200 × 1,15 = 230
+2) Уменьшить 200 на 15%: 200 × 0,85 = 170
+
+Последовательные изменения:
+A × (1 ± p/100) × (1 ± q/100)
+
+Пример: Цену 1000 руб сначала повысили на 10%, затем понизили на 10%.
+Конечная цена: 1000 × 1,1 × 0,9 = 990 руб""",
+
+        3: """📖 Урок 3: Сложные проценты
+
+Формула сложных процентов:
+A = P × (1 + r/n)^(n×t)
+
+где:
+P - начальная сумма
+r - годовая процентная ставка (в десятичных)
+n - количество начислений в год
+t - количество лет
+A - конечная сумма
+
+Пример: Банковский вклад 10000 руб под 10% годовых на 2 года с ежегодной капитализацией.
+A = 10000 × (1 + 0,1)^2 = 10000 × 1,21 = 12100 руб
+
+Задачи на концентрацию:
+Концентрация = (масса вещества / масса раствора) × 100%
+
+Пример: Смешали 200 г 10% и 300 г 20% растворов.
+Концентрация = (200×0,1 + 300×0,2) / 500 × 100% = (20 + 60) / 500 × 100% = 16%"""
     }
 
     text = lessons.get(lesson_num, lessons[1])
@@ -421,12 +449,198 @@ def send_reference_material(vk, user_id):
 Изменение величины:
 • Увеличение на p%: A × (1 + p/100)
 • Уменьшение на p%: A × (1 - p/100)
-• Последовательные изменения: A × (1 ± p/100) × (1 ± q/100)"""
+• Последовательные изменения: A × (1 ± p/100) × (1 ± q/100)
+
+Сложные проценты:
+A = P × (1 + r/n)^(n×t)
+
+Типы задач:
+1. Нахождение процента от числа
+2. Нахождение числа по его проценту
+3. Нахождение процентного отношения
+4. Изменение величины на проценты
+5. Сложные проценты
+6. Задачи на концентрацию и смеси
+
+Алгоритм решения:
+1. Определить, что дано и что нужно найти
+2. Записать данные в виде пропорции
+3. Составить уравнение
+4. Решить уравнение
+5. Проверить ответ на реалистичность"""
 
     keyboard = VkKeyboard()
     keyboard.add_button('🔙 Назад к меню процентов', color=VkKeyboardColor.SECONDARY)
     send_message(vk, user_id, text, keyboard.get_keyboard())
     set_user_state(user_id, 'percentage_tasks', 'reference')
+
+
+# ==================== ОБЩИЕ ФУНКЦИИ ДЛЯ ТРЕНАЖЕРА ====================
+def handle_simulator_input(vk, user_id, user_input, уровень):
+    """Обрабатывает ввод ответа в тренажере"""
+    try:
+        if user_id not in тренажеры_пользователей:
+            send_message(vk, user_id, "❌ Тренажер не инициализирован. Начните заново.")
+            show_simulator_menu(vk, user_id)
+            return
+
+        тренажер = тренажеры_пользователей[user_id]
+        успех, сообщение = тренажер.проверить_ответ(user_input)
+
+        уровень_данные = {
+            'легкий': {'эмодзи': '🟢', 'текст': 'Легкий уровень тренажера'},
+            'средний': {'эмодзи': '🟡', 'текст': 'Средний уровень тренажера'},
+            'сложный': {'эмодзи': '🔴', 'текст': 'Сложный уровень тренажера'},
+            'случайные': {'эмодзи': '🎲', 'текст': 'Случайная задача'}
+        }
+
+        данные_уровня = уровень_данные.get(уровень, {'эмодзи': '📊', 'текст': 'Тренажер'})
+
+        keyboard = VkKeyboard()
+
+        if уровень == 'случайные':
+            keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('🔄 Новая', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_line()
+            keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+        else:
+            keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_line()
+            keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+
+        if успех:
+            if "Следующая задача" in сообщение or "следующая" in сообщение.lower():
+                new_task = тренажер.получить_текущую_задачу()
+                send_message(vk, user_id, f"✅ Верно!\n\n{new_task}\n\nВведите ответ:", keyboard.get_keyboard())
+            else:
+                final_keyboard = VkKeyboard()
+                final_keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+                send_message(vk, user_id, сообщение, final_keyboard.get_keyboard())
+        else:
+            task = тренажер.получить_текущую_задачу()
+            send_message(vk, user_id, f"{сообщение}\n\n{task}\n\nВведите ответ:", keyboard.get_keyboard())
+    except Exception as e:
+        keyboard = VkKeyboard()
+        keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_line()
+        keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+        send_message(vk, user_id, f"❌ Ошибка при проверке ответа: {str(e)}\n\nПопробуйте еще раз:",
+                     keyboard.get_keyboard())
+
+
+def send_simulator_hint(vk, user_id):
+    """Отправляет подсказку для тренажера"""
+    try:
+        if user_id not in тренажеры_пользователей:
+            send_message(vk, user_id, "❌ Тренажер не инициализирован.")
+            return
+
+        тренажер = тренажеры_пользователей[user_id]
+        подсказка = тренажер.получить_подсказку()
+
+        user_state = get_user_state(user_id)
+        submodule = user_state.get('sub_module', '')
+
+        keyboard = VkKeyboard()
+
+        if submodule == 'random_simulator':
+            keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('🔄 Новая', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_line()
+            keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+        else:
+            keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_line()
+            keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+
+        send_message(vk, user_id, подсказка, keyboard.get_keyboard())
+    except Exception as e:
+        send_message(vk, user_id, f"❌ Ошибка при получении подсказки: {str(e)}")
+
+
+def show_simulator_answer(vk, user_id):
+    """Показывает ответ для тренажера"""
+    try:
+        if user_id not in тренажеры_пользователей:
+            send_message(vk, user_id, "❌ Тренажер не инициализирован.")
+            return
+
+        тренажер = тренажеры_пользователей[user_id]
+        ответ = тренажер.показать_ответ()
+
+        user_state = get_user_state(user_id)
+        submodule = user_state.get('sub_module', '')
+
+        if submodule == 'random_simulator':
+            keyboard = VkKeyboard()
+            keyboard.add_button('🔄 Новая', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_line()
+            keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+            send_message(vk, user_id, f"🎲 Случайная задача\n\n{ответ}\n\nНажмите 'Новая задача' для продолжения:",
+                         keyboard.get_keyboard())
+        else:
+            уровень_данные = {
+                'easy_simulator': {'эмодзи': '🟢', 'текст': 'Легкий уровень тренажера'},
+                'medium_simulator': {'эмодзи': '🟡', 'текст': 'Средний уровень тренажера'},
+                'hard_simulator': {'эмодзи': '🔴', 'текст': 'Сложный уровень тренажера'}
+            }
+            данные_уровня = уровень_данные.get(submodule, {'эмодзи': '📊', 'текст': 'Тренажер'})
+            keyboard = VkKeyboard()
+            keyboard.add_button('➡️ Следующая задача', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_line()
+            keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+            send_message(vk, user_id,
+                         f"{данные_уровня['эмодзи']} {данные_уровня['текст']}\n\n{ответ}\n\nНажмите 'Следующая задача' для продолжения:",
+                         keyboard.get_keyboard())
+    except Exception as e:
+        send_message(vk, user_id, f"❌ Ошибка при показе ответа: {str(e)}")
+
+
+def next_simulator_task(vk, user_id):
+    """Переходит к следующей задаче в тренажере"""
+    try:
+        if user_id not in тренажеры_пользователей:
+            send_message(vk, user_id, "❌ Тренажер не инициализирован.")
+            return
+
+        тренажер = тренажеры_пользователей[user_id]
+        user_state = get_user_state(user_id)
+        submodule = user_state.get('sub_module', '')
+
+        if submodule == 'random_simulator':
+            задача = тренажер.получить_следующую_задачу()
+            keyboard = VkKeyboard()
+            keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('🔄 Новая', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_line()
+            keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+            send_message(vk, user_id, f"🎲 Случайная задача\n\n{задача}\n\nВведите ответ:", keyboard.get_keyboard())
+        else:
+            if hasattr(тренажер, 'текущая_задача'):
+                тренажер.текущая_задача += 1
+            задача = тренажер.получить_текущую_задачу()
+            keyboard = VkKeyboard()
+            keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_line()
+            keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+            уровень_данные = {
+                'easy_simulator': {'эмодзи': '🟢', 'текст': 'Легкий уровень тренажера'},
+                'medium_simulator': {'эмодзи': '🟡', 'текст': 'Средний уровень тренажера'},
+                'hard_simulator': {'эмодзи': '🔴', 'текст': 'Сложный уровень тренажера'}
+            }
+            данные_уровня = уровень_данные.get(submodule, {'эмодзи': '📊', 'текст': 'Тренажер'})
+            send_message(vk, user_id,
+                         f"{данные_уровня['эмодзи']} {данные_уровня['текст']}\n\n{задача}\n\nВведите ответ:",
+                         keyboard.get_keyboard())
+    except Exception as e:
+        send_message(vk, user_id, f"❌ Ошибка при переходе к следующей задаче: {str(e)}")
 
 
 # ==================== ОСНОВНОЙ ОБРАБОТЧИК ====================
@@ -531,42 +745,58 @@ def handle_percentage_tasks(vk, user_id, text, user_data):
     # ========== ОСНОВНОЕ МЕНЮ ==========
     if text == '📚 Справка':
         send_reference_material(vk, user_id)
+        return
     elif text == '📝 Примеры':
         show_examples_menu(vk, user_id)
+        return
     elif text == '🎓 Обучение':
         show_training_menu(vk, user_id)
+        return
     elif text == '🎯 Тренажер':
         show_simulator_menu(vk, user_id)
+        return
 
     # ========== ВЫБОР ПРИМЕРОВ ==========
     elif text == '📖 Пример 1':
         send_example_1(vk, user_id)
+        return
     elif text == '📖 Пример 2':
         send_example_2(vk, user_id)
+        return
     elif text == '📖 Пример 3':
         send_example_3(vk, user_id)
+        return
     elif text == '📖 Пример 4':
         send_example_4(vk, user_id)
+        return
     elif text == '📖 Пример 5':
         send_example_5(vk, user_id)
+        return
 
     # ========== ВЫБОР УРОКОВ ==========
     elif text == '📖 Урок 1':
         send_lesson(vk, user_id, 1)
+        return
     elif text == '📖 Урок 2':
         send_lesson(vk, user_id, 2)
+        return
     elif text == '📖 Урок 3':
         send_lesson(vk, user_id, 3)
+        return
 
     # ========== ВЫБОР УРОВНЯ ТРЕНАЖЕРА ==========
     elif text == '🟢 Легкий':
         start_easy_simulator(vk, user_id)
+        return
     elif text == '🟡 Средний':
         start_medium_simulator(vk, user_id)
+        return
     elif text == '🔴 Сложный':
         start_hard_simulator(vk, user_id)
+        return
     elif text == '🎲 Случайно':
         start_random_simulator(vk, user_id)
+        return
 
     # ========== КНОПКИ УПРАВЛЕНИЯ ТРЕНАЖЕРОМ ==========
     elif text == '💡 Подсказка' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
@@ -585,6 +815,7 @@ def handle_percentage_tasks(vk, user_id, text, user_data):
                 keyboard.add_line()
                 keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, hint, keyboard.get_keyboard())
+        return
 
     elif text == '📝 Ответ' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
         if user_id in тренажеры_пользователей:
@@ -602,6 +833,7 @@ def handle_percentage_tasks(vk, user_id, text, user_data):
                 keyboard.add_line()
                 keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, answer, keyboard.get_keyboard())
+        return
 
     elif text == '🔄 Новая' and current_submodule == 'random_simulator':
         if user_id in тренажеры_пользователей:
@@ -613,6 +845,7 @@ def handle_percentage_tasks(vk, user_id, text, user_data):
             keyboard.add_line()
             keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, f"🎲 Новая задача\n\n{new_task}\n\nВведите ответ:", keyboard.get_keyboard())
+        return
 
     elif text == '➡️ Далее' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator']:
         if user_id in тренажеры_пользователей:
@@ -623,17 +856,21 @@ def handle_percentage_tasks(vk, user_id, text, user_data):
             keyboard.add_line()
             keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, f"Следующая задача:\n\n{next_task}\n\nВведите ответ:", keyboard.get_keyboard())
+        return
 
     # ========== НАВИГАЦИЯ В УРОКАХ ==========
     elif text == '⬅️ Назад' and current_submodule == 'viewing_lesson':
         current_lesson = user_state.get('current_lesson', 1)
         prev_lesson = current_lesson - 1 if current_lesson > 1 else 3
         send_lesson(vk, user_id, prev_lesson)
+        return
 
     elif text == '➡️ Далее' and current_submodule == 'viewing_lesson':
         current_lesson = user_state.get('current_lesson', 1)
         next_lesson = current_lesson + 1 if current_lesson < 3 else 1
         send_lesson(vk, user_id, next_lesson)
+        return
 
     else:
         show_percentage_main_menu(vk, user_id)
+        return
