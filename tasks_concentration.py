@@ -641,13 +641,10 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
         return
 
     if text == '🔙 Назад':
-        # Если были в примере, возвращаемся в меню примеров
         if current_submodule == 'viewing_example':
             show_examples_menu(vk, user_id)
-        # Если были в уроке, возвращаемся в меню уроков
         elif current_submodule == 'viewing_lesson':
             show_training_menu(vk, user_id)
-        # Если были в тренажере, возвращаемся в меню тренажера
         elif current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
             show_simulator_menu(vk, user_id)
         else:
@@ -768,8 +765,7 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
         start_random_simulator(vk, user_id)
 
     # ========== КНОПКИ УПРАВЛЕНИЯ ТРЕНАЖЕРОМ ==========
-    elif text == '💡 Подсказка' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator',
-                                                         'random_simulator']:
+    elif text == '💡 Подсказка' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
         if user_id in тренажеры_пользователей:
             hint = тренажеры_пользователей[user_id].получить_подсказку()
             keyboard = VkKeyboard()
@@ -786,8 +782,7 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
                 keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, hint, keyboard.get_keyboard())
 
-    elif text == '📝 Ответ' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator',
-                                                     'random_simulator']:
+    elif text == '📝 Ответ' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
         if user_id in тренажеры_пользователей:
             answer = тренажеры_пользователей[user_id].показать_ответ()
             keyboard = VkKeyboard()
