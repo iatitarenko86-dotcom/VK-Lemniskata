@@ -446,7 +446,6 @@ def handle_percentage_tasks(vk, user_id, text, user_data):
         return
 
     if text == '🔙 Назад':
-        # Возвращаемся в предыдущее меню в зависимости от текущего подмодуля
         if current_submodule == 'examples_menu' or current_submodule == 'viewing_example':
             show_examples_menu(vk, user_id)
         elif current_submodule == 'training_menu' or current_submodule == 'viewing_lesson':
@@ -570,8 +569,7 @@ def handle_percentage_tasks(vk, user_id, text, user_data):
         start_random_simulator(vk, user_id)
 
     # ========== КНОПКИ УПРАВЛЕНИЯ ТРЕНАЖЕРОМ ==========
-    elif text == '💡 Подсказка' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator',
-                                                         'random_simulator']:
+    elif text == '💡 Подсказка' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
         if user_id in тренажеры_пользователей:
             hint = тренажеры_пользователей[user_id].получить_подсказку()
             keyboard = VkKeyboard()
@@ -588,8 +586,7 @@ def handle_percentage_tasks(vk, user_id, text, user_data):
                 keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, hint, keyboard.get_keyboard())
 
-    elif text == '📝 Ответ' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator',
-                                                     'random_simulator']:
+    elif text == '📝 Ответ' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
         if user_id in тренажеры_пользователей:
             answer = тренажеры_пользователей[user_id].показать_ответ()
             keyboard = VkKeyboard()
