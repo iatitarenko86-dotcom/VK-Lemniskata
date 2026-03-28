@@ -9,6 +9,7 @@ import tasks_percentage
 import random
 import sys
 import logging
+import time
 
 # Импортируем функции управления состояниями из отдельного модуля
 from user_states import set_user_state, get_user_state, get_current_module, get_current_submodule, update_user_data
@@ -31,6 +32,35 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# ==================== ФИЛЬТР ДУБЛИКАТОВ ====================
+class MessageFilter:
+    def __init__(self, timeout=2):
+        self.processed = {}
+        self.timeout = timeout
+    
+    def is_processed(self, message_id, peer_id):
+        key = f"{peer_id}_{message_id}"
+        now = time.time()
+        
+        if key in self.processed:
+            if now - self.processed[key] < self.timeout:
+                return True
+        
+        self.processed[key] = now
+        self._cleanup(now)
+        return False
+    
+    def _cleanup(self, now):
+        to_delete = []
+        for key, timestamp in self.processed.items():
+            if now - timestamp > 10:
+                to_delete.append(key)
+        
+        for key in to_delete:
+            del self.processed[key]
+
+# Создаем экземпляр фильтра
+message_filter = MessageFilter()
 
 # ==================== ИНИЦИАЛИЗАЦИЯ VK ====================
 def init_vk():
@@ -55,7 +85,7 @@ vk_session, vk = init_vk()
 
 # Инициализация Long Poll
 try:
-    longpoll = VkBotLongPoll(vk_session, GROUP_ID)
+    longpoll = VkBotLongPoll(vk_session, GROUP_ID, wait=25)
     logger.info("✅ Long Poll успешно запущен")
 except Exception as e:
     logger.error(f"❌ Ошибка инициализации Long Poll: {e}")
@@ -295,6 +325,15 @@ def show_work_main_menu(vk, user_id):
 # ==================== ОБРАБОТЧИК СООБЩЕНИЙ ====================
 def handle_message(event):
     """Обрабатывает входящие сообщения"""
+    
+    # Проверка на дубликат
+    message_id = event.obj.message['id']
+    peer_id = event.obj.message['peer_id']
+    
+    if message_filter.is_processed(message_id, peer_id):
+        logger.debug(f"⚠️ Пропущено дублирующее сообщение ID: {message_id}")
+        return
+    
     user_id = event.obj.message['from_id']
     text = event.obj.message['text'].strip()
 
