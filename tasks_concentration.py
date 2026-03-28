@@ -727,42 +727,58 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
     # ========== ОСНОВНОЕ МЕНЮ ==========
     if text == '📚 Справка':
         send_reference_material(vk, user_id)
+        return
     elif text == '📝 Примеры':
         show_examples_menu(vk, user_id)
+        return
     elif text == '🎓 Обучение':
         show_training_menu(vk, user_id)
+        return
     elif text == '🎯 Тренажер':
         show_simulator_menu(vk, user_id)
+        return
 
     # ========== ВЫБОР ПРИМЕРОВ ==========
     elif text == '📖 Пример 1':
         send_example_1(vk, user_id)
+        return
     elif text == '📖 Пример 2':
         send_example_2(vk, user_id)
+        return
     elif text == '📖 Пример 3':
         send_example_3(vk, user_id)
+        return
     elif text == '📖 Пример 4':
         send_example_4(vk, user_id)
+        return
     elif text == '📖 Пример 5':
         send_example_5(vk, user_id)
+        return
 
     # ========== ВЫБОР УРОКОВ ==========
     elif text == '📖 Урок 1':
         send_lesson(vk, user_id, 1)
+        return
     elif text == '📖 Урок 2':
         send_lesson(vk, user_id, 2)
+        return
     elif text == '📖 Урок 3':
         send_lesson(vk, user_id, 3)
+        return
 
     # ========== ВЫБОР УРОВНЯ ТРЕНАЖЕРА ==========
     elif text == '🟢 Легкий':
         start_easy_simulator(vk, user_id)
+        return
     elif text == '🟡 Средний':
         start_medium_simulator(vk, user_id)
+        return
     elif text == '🔴 Сложный':
         start_hard_simulator(vk, user_id)
+        return
     elif text == '🎲 Случайно':
         start_random_simulator(vk, user_id)
+        return
 
     # ========== КНОПКИ УПРАВЛЕНИЯ ТРЕНАЖЕРОМ ==========
     elif text == '💡 Подсказка' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
@@ -781,6 +797,7 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
                 keyboard.add_line()
                 keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, hint, keyboard.get_keyboard())
+        return
 
     elif text == '📝 Ответ' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
         if user_id in тренажеры_пользователей:
@@ -798,6 +815,7 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
                 keyboard.add_line()
                 keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, answer, keyboard.get_keyboard())
+        return
 
     elif text == '🔄 Новая' and current_submodule == 'random_simulator':
         if user_id in тренажеры_пользователей:
@@ -809,6 +827,7 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
             keyboard.add_line()
             keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, f"🎲 Новая задача\n\n{new_task}\n\nВведите ответ:", keyboard.get_keyboard())
+        return
 
     elif text == '➡️ Далее' and current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator']:
         if user_id in тренажеры_пользователей:
@@ -819,17 +838,21 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
             keyboard.add_line()
             keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
             send_message(vk, user_id, f"Следующая задача:\n\n{next_task}\n\nВведите ответ:", keyboard.get_keyboard())
+        return
 
     # ========== НАВИГАЦИЯ В УРОКАХ ==========
     elif text == '⬅️ Назад' and current_submodule == 'viewing_lesson':
         current_lesson = user_state.get('current_lesson', 1)
         prev_lesson = current_lesson - 1 if current_lesson > 1 else 3
         send_lesson(vk, user_id, prev_lesson)
+        return
 
     elif text == '➡️ Далее' and current_submodule == 'viewing_lesson':
         current_lesson = user_state.get('current_lesson', 1)
         next_lesson = current_lesson + 1 if current_lesson < 3 else 1
         send_lesson(vk, user_id, next_lesson)
+        return
 
     else:
         show_concentration_main_menu(vk, user_id)
+        return
