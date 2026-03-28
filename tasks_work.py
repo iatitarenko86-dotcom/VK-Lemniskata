@@ -57,6 +57,6 @@ def handle_work_tasks(vk, user_id, text, user_data):
     """Обрабатывает сообщения в модуле задач на работу"""
     if text == '🔙 Назад':
         from main import show_text_tasks_menu
-        show_text_tasks_menu(vk, user_id)
+        show_text_tasks_menu(user_id)  # Исправлено: убрали vk
     else:
         start_work_tasks(vk, user_id, user_data)
