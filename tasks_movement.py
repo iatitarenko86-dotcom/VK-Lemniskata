@@ -65,8 +65,8 @@ def show_movement_main_menu(vk, user_id):
     """Отображает главное меню задач на движение"""
     keyboard = VkKeyboard()
 
-    keyboard.add_button('📚 Справочный материал', color=VkKeyboardColor.PRIMARY)
-    keyboard.add_button('📝 Примеры задач', color=VkKeyboardColor.PRIMARY)
+    keyboard.add_button('📚 Справка', color=VkKeyboardColor.PRIMARY)
+    keyboard.add_button('📝 Примеры', color=VkKeyboardColor.PRIMARY)
     keyboard.add_line()
     keyboard.add_button('🎓 Обучение', color=VkKeyboardColor.PRIMARY)
     keyboard.add_button('🎯 Тренажер', color=VkKeyboardColor.PRIMARY)
@@ -77,8 +77,8 @@ def show_movement_main_menu(vk, user_id):
 
 Выберите раздел для изучения:
 
-• 📚 Справочный материал - формулы и теория
-• 📝 Примеры задач - готовые решения
+• 📚 Справка - формулы и теория
+• 📝 Примеры - готовые решения
 • 🎓 Обучение - пошаговое изучение
 • 🎯 Тренажер - практические задания"""
 
@@ -117,7 +117,7 @@ def show_simulator_menu(vk, user_id):
     set_user_state(user_id, 'movement_tasks', 'simulator_menu')
 
 
-# ==================== ЗАПУСК ЛЕГКОГО УРОВНЯ ====================
+# ==================== ЗАПУСК УРОВНЕЙ ТРЕНАЖЕРА ====================
 def start_easy_simulator(vk, user_id):
     """Запускает легкий уровень тренажера"""
     try:
@@ -151,7 +151,6 @@ def start_easy_simulator(vk, user_id):
         show_simulator_menu(vk, user_id)
 
 
-# ==================== ЗАПУСК СРЕДНЕГО УРОВНЯ ====================
 def start_medium_simulator(vk, user_id):
     """Запускает средний уровень тренажера"""
     try:
@@ -185,7 +184,6 @@ def start_medium_simulator(vk, user_id):
         show_simulator_menu(vk, user_id)
 
 
-# ==================== ЗАПУСК СЛОЖНОГО УРОВНЯ ====================
 def start_hard_simulator(vk, user_id):
     """Запускает сложный уровень тренажера"""
     try:
@@ -219,7 +217,6 @@ def start_hard_simulator(vk, user_id):
         show_simulator_menu(vk, user_id)
 
 
-# ==================== ЗАПУСК СЛУЧАЙНЫХ ЗАДАЧ ====================
 def start_random_simulator(vk, user_id):
     """Запускает режим случайных задач"""
     try:
@@ -521,7 +518,7 @@ def show_examples_menu(vk, user_id):
     set_user_state(user_id, 'movement_tasks', 'examples_menu')
 
 
-# ==================== ПРИМЕРЫ ЗАДАЧ (сокращенные для краткости) ====================
+# ==================== ПРИМЕРЫ ЗАДАЧ (сокращенные) ====================
 def send_example_1(vk, user_id):
     example_text = """🚗 Пример 1: Два автомобиля
 
@@ -750,7 +747,7 @@ def handle_movement_tasks(vk, user_id, text, user_data):
     if current_submodule in ['easy_simulator', 'medium_simulator', 'hard_simulator', 'random_simulator']:
         системные_кнопки = [
             '💡 Подсказка', '📝 Показать ответ', '🔙 Назад к тренажеру', '➡️ Следующая задача',
-            '🔄 Новая задача', '📚 Справочный материал', '📝 Примеры задач', '🎓 Обучение',
+            '🔄 Новая задача', '📚 Справка', '📝 Примеры', '🎓 Обучение',
             '🎯 Тренажер', '🟢 Легкий уровень', '🟡 Средний уровень', '🔴 Сложный уровень',
             '🎲 Случайная задача', '🔙 Назад к меню движения', '🔙 Назад к типам задач',
             '🔙 Назад к примерам', '🔙 Назад к урокам'
@@ -768,9 +765,9 @@ def handle_movement_tasks(vk, user_id, text, user_data):
             return
 
     # ========== ГЛАВНОЕ МЕНЮ ДВИЖЕНИЯ ==========
-    if text == '📚 Справочный материал':
+    if text == '📚 Справка':
         send_reference_material(vk, user_id)
-    elif text == '📝 Примеры задач':
+    elif text == '📝 Примеры':
         show_examples_menu(vk, user_id)
     elif text == '🎓 Обучение':
         show_training_menu(vk, user_id)
