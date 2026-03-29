@@ -127,12 +127,163 @@ def show_examples_menu(vk, user_id):
     keyboard.add_line()
     keyboard.add_button('📖 Пример 5: Два сплава', color=VkKeyboardColor.PRIMARY)
     keyboard.add_button('📖 Пример 6: Правило креста', color=VkKeyboardColor.PRIMARY)
+    keyboard.add_line()
     keyboard.add_button('🔙 Назад к меню концентрации', color=VkKeyboardColor.SECONDARY)
 
     text = "📝 Выберите пример для изучения:\n\nКаждый пример содержит:\n• Таблицу данных\n• Развернутое решение\n• Пояснения к каждому шагу\n• Рекомендации по решению"
 
     send_message(vk, user_id, text, keyboard.get_keyboard())
     set_user_state(user_id, 'concentration_tasks', 'examples_menu')
+
+
+# ==================== МЕНЮ ОБУЧЕНИЯ ====================
+def show_training_menu(vk, user_id):
+    """Меню обучения"""
+    keyboard = VkKeyboard()
+
+    keyboard.add_button('📖 Урок 1', color=VkKeyboardColor.PRIMARY)
+    keyboard.add_button('📖 Урок 2', color=VkKeyboardColor.PRIMARY)
+    keyboard.add_button('📖 Урок 3', color=VkKeyboardColor.PRIMARY)
+    keyboard.add_line()
+    keyboard.add_button('🔙 Назад к меню концентрации', color=VkKeyboardColor.SECONDARY)
+
+    text = "🎓 Выберите урок:"
+    send_message(vk, user_id, text, keyboard.get_keyboard())
+    set_user_state(user_id, 'concentration_tasks', 'training_menu')
+
+
+# ==================== ЗАПУСК УРОВНЕЙ ТРЕНАЖЕРА ====================
+def start_easy_simulator(vk, user_id):
+    """Запускает легкий уровень тренажера"""
+    try:
+        if user_id not in тренажеры_пользователей:
+            тренажеры_пользователей[user_id] = SimulatorConcentration1()
+        else:
+            if not isinstance(тренажеры_пользователей[user_id], SimulatorConcentration1):
+                тренажеры_пользователей[user_id] = SimulatorConcentration1()
+
+        тренажер = тренажеры_пользователей[user_id]
+        задача = тренажер.начать_уровень()
+
+        update_user_data(user_id, {
+            'тренажер_активен': True,
+            'уровень_тренажера': 'легкий'
+        })
+
+        keyboard = VkKeyboard()
+        keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_line()
+        keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+
+        send_message(vk, user_id,
+                     f"🟢 Легкий уровень\n\n{задача}\n\nВведите ответ:",
+                     keyboard.get_keyboard())
+
+        set_user_state(user_id, 'concentration_tasks', 'easy_simulator')
+    except Exception as e:
+        send_message(vk, user_id, f"❌ Ошибка: {str(e)}")
+        show_simulator_menu(vk, user_id)
+
+
+def start_medium_simulator(vk, user_id):
+    """Запускает средний уровень тренажера"""
+    try:
+        if user_id not in тренажеры_пользователей:
+            тренажеры_пользователей[user_id] = SimulatorConcentration2()
+        else:
+            if not isinstance(тренажеры_пользователей[user_id], SimulatorConcentration2):
+                тренажеры_пользователей[user_id] = SimulatorConcentration2()
+
+        тренажер = тренажеры_пользователей[user_id]
+        задача = тренажер.начать_уровень()
+
+        update_user_data(user_id, {
+            'тренажер_активен': True,
+            'уровень_тренажера': 'средний'
+        })
+
+        keyboard = VkKeyboard()
+        keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_line()
+        keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+
+        send_message(vk, user_id,
+                     f"🟡 Средний уровень\n\n{задача}\n\nВведите ответ:",
+                     keyboard.get_keyboard())
+
+        set_user_state(user_id, 'concentration_tasks', 'medium_simulator')
+    except Exception as e:
+        send_message(vk, user_id, f"❌ Ошибка: {str(e)}")
+        show_simulator_menu(vk, user_id)
+
+
+def start_hard_simulator(vk, user_id):
+    """Запускает сложный уровень тренажера"""
+    try:
+        if user_id not in тренажеры_пользователей:
+            тренажеры_пользователей[user_id] = SimulatorConcentration3()
+        else:
+            if not isinstance(тренажеры_пользователей[user_id], SimulatorConcentration3):
+                тренажеры_пользователей[user_id] = SimulatorConcentration3()
+
+        тренажер = тренажеры_пользователей[user_id]
+        задача = тренажер.начать_уровень()
+
+        update_user_data(user_id, {
+            'тренажер_активен': True,
+            'уровень_тренажера': 'сложный'
+        })
+
+        keyboard = VkKeyboard()
+        keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_line()
+        keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+
+        send_message(vk, user_id,
+                     f"🔴 Сложный уровень\n\n{задача}\n\nВведите ответ:",
+                     keyboard.get_keyboard())
+
+        set_user_state(user_id, 'concentration_tasks', 'hard_simulator')
+    except Exception as e:
+        send_message(vk, user_id, f"❌ Ошибка: {str(e)}")
+        show_simulator_menu(vk, user_id)
+
+
+def start_random_simulator(vk, user_id):
+    """Запускает режим случайных задач"""
+    try:
+        if user_id not in тренажеры_пользователей:
+            тренажеры_пользователей[user_id] = SimulatorConcentration4()
+        else:
+            if not isinstance(тренажеры_пользователей[user_id], SimulatorConcentration4):
+                тренажеры_пользователей[user_id] = SimulatorConcentration4()
+
+        тренажер = тренажеры_пользователей[user_id]
+        задача = тренажер.начать_уровень()
+
+        update_user_data(user_id, {
+            'тренажер_активен': True,
+            'уровень_тренажера': 'случайные'
+        })
+
+        keyboard = VkKeyboard()
+        keyboard.add_button('💡 Подсказка', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button('📝 Ответ', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button('🔄 Новая', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_line()
+        keyboard.add_button('🔙 Назад к тренажеру', color=VkKeyboardColor.SECONDARY)
+
+        send_message(vk, user_id,
+                     f"🎲 Случайная задача\n\n{задача}\n\nВведите ответ:",
+                     keyboard.get_keyboard())
+
+        set_user_state(user_id, 'concentration_tasks', 'random_simulator')
+    except Exception as e:
+        send_message(vk, user_id, f"❌ Ошибка: {str(e)}")
+        show_simulator_menu(vk, user_id)
 
 
 # ==================== ПРИМЕРЫ ЗАДАЧ (ПОЛНЫЕ ВЕРСИИ С ТАБЛИЦАМИ) ====================
@@ -555,7 +706,7 @@ def send_lesson(vk, user_id, lesson_num):
 Решение:
 m = 200 × 15% / 100% = 200 × 0,15 = 30 г
 
-Ответ: 30 г соли"""
+Ответ: 30 г соли""",
 
         2: """📖 Урок 2: Смешивание растворов
 
@@ -582,7 +733,7 @@ m = 60 + 60 = 120 г
 M = 300 + 200 = 500 г
 c = (120 / 500) × 100% = 24%
 
-Ответ: 24%"""
+Ответ: 24%""",
 
         3: """📖 Урок 3: Сплавы и высушивание
 
@@ -870,6 +1021,10 @@ def handle_concentration_tasks(vk, user_id, text, user_data):
 
     if text == '🔙 Назад к меню концентрации':
         show_concentration_main_menu(vk, user_id)
+        return
+
+    if text == '🔙 Назад к тренажеру':
+        show_simulator_menu(vk, user_id)
         return
 
     if text == '🔙 Назад':
