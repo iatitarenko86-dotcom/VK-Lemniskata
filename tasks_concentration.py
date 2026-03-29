@@ -59,7 +59,6 @@ def send_message(vk, user_id, text, keyboard=None):
         print(f"Ошибка при отправке сообщения: {e}")
         return False
 
-
 # ==================== ГЛАВНОЕ МЕНЮ КОНЦЕНТРАЦИИ ====================
 def show_concentration_main_menu(vk, user_id):
     """Отображает главное меню задач на концентрацию"""
