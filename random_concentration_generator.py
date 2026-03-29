@@ -243,17 +243,14 @@ class RandomConcentrationGenerator:
     def generate_random_task(self, difficulty=None):
         """Генерирует случайную задачу"""
         if difficulty:
-            # Фильтруем шаблоны по сложности
             filtered_templates = [t for t in self.task_templates if t["difficulty"] == difficulty]
             if filtered_templates:
                 template = random.choice(filtered_templates)
             else:
                 template = random.choice(self.task_templates)
         else:
-            # Выбираем случайный шаблон любой сложности
             template = random.choice(self.task_templates)
 
-        # Генерируем задачу
         task_data = template["generate"]()
         task_data["difficulty"] = template["difficulty"]
         task_data["type"] = template["type"]
@@ -264,22 +261,20 @@ class RandomConcentrationGenerator:
 
     def _generate_easy_syrup_mixing(self):
         """Задача на смешивание сиропов (из задачи 1 легкого уровня)"""
-        # Вариации параметров
-        c1 = random.choice([20, 22, 25, 30])  # концентрация первого
-        c2 = random.choice([35, 40, 45, 50])  # концентрация второго
-        total_mass = random.choice([6, 9, 12, 15])  # общая масса
-        c_target = random.choice([24, 25, 28, 32])  # целевая концентрация
+        c1 = random.choice([20, 22, 25, 30])
+        c2 = random.choice([35, 40, 45, 50])
+        total_mass = random.choice([6, 9, 12, 15])
+        c_target = random.choice([24, 25, 28, 32])
 
-        # Находим массу второго раствора из уравнения
-        # (total_mass - x)*c1/100 + x*c2/100 = total_mass*c_target/100
         x = round(total_mass * (c_target - c1) / (c2 - c1), 1)
 
+        # Выбираем одно вещество
         вещества = ["клубничного сиропа", "малинового сиропа", "вишневого сиропа"]
         вещество = random.choice(вещества)
 
         if 0 < x < total_mass:
             task = {
-                "condition": f"Смешали два вида {вещества}: в первом содержание сахара было {c1}%, а во втором {c2}%. "
+                "condition": f"Смешали два вида {вещество}: в первом содержание сахара было {c1}%, а во втором {c2}%. "
                              f"Сколько килограммов сиропа второго вида взяли, если получилось ровно {total_mass} кг сиропа с содержанием сахара {c_target}%?",
                 "answer": x,
                 "solution": (
@@ -296,22 +291,15 @@ class RandomConcentrationGenerator:
 
     def _generate_easy_acid_water_cycle(self):
         """Задача на цикл с водой и кислотой (из задачи 2 легкого уровня)"""
-        # Вариации параметров
         acid_part = random.choice([3, 4, 5, 6])
         water_part = 1
 
-        # Первоначальная концентрация
         c_initial = round(acid_part / (acid_part + water_part) * 100)
 
-        # После добавления воды до 20%
         mass_initial = acid_part + water_part
         mass_after_water = round(acid_part / 0.2)
-
-        # После добавления кислоты до 80%
         water_mass = mass_after_water - acid_part
         mass_final = round(water_mass / 0.2)
-
-        # Во сколько раз увеличилась масса
         ratio = mass_final / mass_initial
 
         task = {
@@ -337,11 +325,9 @@ class RandomConcentrationGenerator:
         """Задача на смесь орехов (из задачи 3 легкого уровня)"""
         total = random.choice([500, 600, 692, 800])
         diff = random.choice([400, 475, 500])
-        p1 = random.choice([60, 65, 70])  # процент съеденного фундука
-        p2 = random.choice([20, 25, 30])  # процент съеденного миндаля
+        p1 = random.choice([60, 65, 70])
+        p2 = random.choice([20, 25, 30])
 
-        # Находим массу фундука из уравнения
-        # 0.75*(total - x) = 0.35*x + diff
         x = round((0.75 * total - diff) / (0.75 + 0.35), 1)
 
         if 0 < x < total:
@@ -373,6 +359,7 @@ class RandomConcentrationGenerator:
         total_v = v1 + v2
         c_result = round(substance / total_v * 100)
 
+        # Выбираем один вид сока
         соки = [("апельсинового", "ананасового"), ("яблочного", "виноградного"), ("лимонного", "апельсинового")]
         juice1, juice2 = random.choice(соки)
 
@@ -397,10 +384,9 @@ class RandomConcentrationGenerator:
 
         metal_mass = mass * p_initial / 100
         other_mass = mass - metal_mass
-
-        # Для увеличения доли металла нужно добавить этот металл
         x = round((p_target / 100 * mass - metal_mass) / (1 - p_target / 100), 1)
 
+        # Выбираем один вид металла
         металлы = [("цинка", "меди"), ("меди", "цинка"), ("никеля", "меди")]
         metal1, metal2 = random.choice(металлы)
 
@@ -429,6 +415,7 @@ class RandomConcentrationGenerator:
         mass_final = mass + water
         c_final = round(substance / mass_final * 100, 1)
 
+        # Выбираем одно вещество
         вещества = ["сироп", "раствор соли", "раствор сахара"]
         вещество = random.choice(вещества)
 
@@ -448,11 +435,11 @@ class RandomConcentrationGenerator:
         part1, part2, part3 = random.choice(parts)
         given_mass = random.choice([400, 600, 800, 1000])
 
-        # given_mass соответствует part1
         one_part = given_mass / part1
         total_parts = part1 + part2 + part3
         total_mass = one_part * total_parts
 
+        # Выбираем один вид овощей
         овощи = [("моркови", "лука", "картофеля"), ("капусты", "моркови", "лука"), ("помидоров", "огурцов", "перца")]
         veg1, veg2, veg3 = random.choice(овощи)
 
@@ -473,11 +460,11 @@ class RandomConcentrationGenerator:
         part1, part2 = random.choice(ratios)
         diff = random.choice([4, 6, 8, 10])
 
-        # Разность частей = part2 - part1
         part_diff = part2 - part1
         one_part = diff / part_diff
         mass1 = part1 * one_part
 
+        # Выбираем один вид конфет
         конфеты = [("шоколадных конфет", "карамелей"), ("леденцов", "шоколадных"), ("ирисок", "батончиков")]
         candy1, candy2 = random.choice(конфеты)
 
@@ -525,6 +512,7 @@ class RandomConcentrationGenerator:
         total = m1 + m2
         p_result = round(copper / total * 100)
 
+        # Выбираем один вид металла
         металлы = [("меди", "цинка"), ("никеля", "меди"), ("серебра", "меди")]
         metal, other = random.choice(металлы)
 
@@ -550,10 +538,10 @@ class RandomConcentrationGenerator:
         c_high = random.choice([90, 80])
         water = random.choice([3, 4, 5, 6])
 
-        # Для простоты задаём фиксированные значения x и y
         x = 2
         y = 2
 
+        # Выбираем одно вещество
         вещества = ["кислоты", "щелочи"]
         вещество = random.choice(вещества)
 
@@ -578,15 +566,14 @@ class RandomConcentrationGenerator:
         c2 = random.randint(40, 60)
         c_target = random.randint(c1 + 5, c2 - 5)
 
-        # Находим соотношение по правилу креста
         part1 = c2 - c_target
         part2 = c_target - c1
 
-        # Сокращаем дробь
         gcd = math.gcd(part1, part2)
         part1 //= gcd
         part2 //= gcd
 
+        # Выбираем одно вещество
         вещества = ["кислоты", "щелочи", "сахара", "соли"]
         вещество = random.choice(вещества)
 
@@ -607,7 +594,6 @@ class RandomConcentrationGenerator:
 
     def _generate_medium_election_percent(self):
         """Задача на проценты голосов (из задачи 3 среднего уровня)"""
-        # Пусть x - голоса за первого
         x = random.randint(100, 200)
         votes_third = 2 * x
         votes_first_third = x + 2 * x
@@ -615,6 +601,7 @@ class RandomConcentrationGenerator:
         total = x + votes_second + 2 * x
         winner_percent = round(max(x, votes_second, 2 * x) / total * 100)
 
+        # Выбираем один вид фамилий
         фамилии = [
             ("Журавлев", "Зайцев", "Иванов"),
             ("Петров", "Сидоров", "Иванов"),
@@ -646,6 +633,7 @@ class RandomConcentrationGenerator:
         dry_matter = fresh_mass * (100 - water_fresh) / 100
         dry_mass = round(dry_matter / ((100 - water_dry) / 100), 1)
 
+        # Выбираем один вид фруктов
         фрукты = ["фруктов", "яблок", "груш", "слив", "абрикосов"]
         фрукт = random.choice(фрукты)
 
@@ -668,11 +656,12 @@ class RandomConcentrationGenerator:
 
         avg_c = (c1 + c2) / 2
 
+        # Выбираем одно вещество
         вещества = ["раствора", "вещества", "кислоты"]
         вещество = random.choice(вещества)
 
         task = {
-            "condition": f"Смешали некоторое количество {c1}% {вещества} с таким же количеством {c2}% {вещества} этого же вещества. "
+            "condition": f"Смешали некоторое количество {c1}% {вещество} с таким же количеством {c2}% {вещество} этого же вещества. "
                          f"Сколько процентов составляет концентрация получившегося раствора?",
             "answer": avg_c,
             "solution": (f"1. Возьмём по 1 кг каждого раствора\n"
@@ -695,6 +684,7 @@ class RandomConcentrationGenerator:
         total_v = v1 + v2
         c_result = round(substance / total_v * 100)
 
+        # Выбираем одно вещество
         вещества = ["вещества", "кислоты", "щелочи"]
         вещество = random.choice(вещества)
 
@@ -717,10 +707,10 @@ class RandomConcentrationGenerator:
         c1 = random.randint(5, 15)
         c2 = random.randint(25, 35)
 
-        # Находим массы сплавов
         x = round((c_target * total - c2 * total) / (c1 - c2))
         y = total - x
 
+        # Выбираем один вид металла
         металлы = [("никеля", "меди"), ("меди", "цинка"), ("серебра", "меди")]
         metal, other = random.choice(металлы)
 
@@ -744,9 +734,9 @@ class RandomConcentrationGenerator:
         zinc_initial = random.randint(8, 12)
         zinc_added = random.randint(15, 25)
 
-        # Находим первоначальную массу сплава
         M = round(0.75 * zinc_added / 0.25)
 
+        # Выбираем один вид металла
         металлы = [("цинка", "меди"), ("свинца", "олова")]
         metal1, metal2 = random.choice(металлы)
 
@@ -774,8 +764,7 @@ class RandomConcentrationGenerator:
         water_added = 100
         percent_decrease = 1
 
-        # M² + 100M - 300000 = 0
-        M = 500  # фиксированное решение
+        M = 500
 
         task = {
             "condition": f"В водный раствор соли добавили {water_added} г воды. В результате концентрация соли в растворе понизилась на {percent_decrease}%. "
@@ -798,7 +787,6 @@ class RandomConcentrationGenerator:
         c2 = 55
         c_target = 5
 
-        # v1*c1/100 + x*c2/100 = (v1 + x)*c_target/100
         x = round(v1 * (c_target - c1) / (c2 - c_target))
 
         task = {
@@ -822,6 +810,7 @@ class RandomConcentrationGenerator:
 
         avg_c = (c1 + c2) / 2
 
+        # Выбираем одно вещество
         вещества = ["вещества", "кислоты", "соли"]
         вещество = random.choice(вещества)
 
@@ -847,7 +836,6 @@ class RandomConcentrationGenerator:
         c_high = 90
         water = 5
 
-        # Фиксированные значения x и y
         x = 2
         y = 2
 
@@ -874,11 +862,11 @@ class RandomConcentrationGenerator:
     def _generate_hard_nut_problem(self):
         """Сложная задача с орехами (из задачи 2 сложного уровня)"""
         total = 692
-        p1 = 65  # процент съеденного фундука
-        p2 = 25  # процент съеденного миндаля
+        p1 = 65
+        p2 = 25
         diff = 475
 
-        x = 40  # масса фундука
+        x = 40
 
         task = {
             "condition": f"Ореховая смесь, состоящая из фундука и миндаля, имеет массу {total} г. После того как съели {p2}% миндаля "
@@ -902,7 +890,7 @@ class RandomConcentrationGenerator:
         c_mix = 68
         c_equal = 70
 
-        x = 0.6  # концентрация первого
+        x = 0.6
         acid_mass = round(m1 * x)
 
         task = {
@@ -930,6 +918,7 @@ class RandomConcentrationGenerator:
 
         x = 50
 
+        # Выбираем одно вещество
         вещества = ["соли", "сахара", "кислоты"]
         вещество = random.choice(вещества)
 
@@ -1003,7 +992,6 @@ class RandomConcentrationGenerator:
         V = 12
         c_target = 36
 
-        # Из формулы c = (1 - x/V)² = c_target/100
         x = round(V * (1 - math.sqrt(c_target / 100)), 1)
 
         task = {
@@ -1231,7 +1219,6 @@ class RandomConcentrationSimulator:
         self.current_task = self.generator.generate_random_task()
         self.current_difficulty = self.current_task["difficulty"]
 
-        # Определяем эмодзи для уровня сложности
         difficulty_emojis = {
             "easy": "🟢",
             "medium": "🟡",
@@ -1278,13 +1265,11 @@ class RandomConcentrationSimulator:
         try:
             правильный_ответ = self.current_task["answer"]
 
-            # Для ответов в виде отношения
             if isinstance(правильный_ответ, str) and (':' in правильный_ответ or ';' in правильный_ответ):
                 ответ_норм = str(ответ_пользователя).strip().lower().replace(' ', '')
                 правильный_норм = правильный_ответ.strip().lower().replace(' ', '')
 
                 if ответ_норм == правильный_норм or ответ_норм == правильный_норм.replace(';', ':'):
-                    # Генерируем новую задачу
                     new_task = self.generator.generate_random_task()
                     self.current_task = new_task
 
@@ -1307,13 +1292,10 @@ class RandomConcentrationSimulator:
                 else:
                     return False, "❌ *Неверно, попробуйте еще раз!*"
 
-            # Для числовых ответов
             user_answer = float(str(ответ_пользователя).replace(',', '.').strip())
             correct_answer = float(правильный_ответ)
 
-            # Допустимая погрешность 0.1 для дробных ответов
             if abs(user_answer - correct_answer) < 0.1:
-                # Генерируем новую задачу
                 new_task = self.generator.generate_random_task()
                 self.current_task = new_task
 
@@ -1336,10 +1318,8 @@ class RandomConcentrationSimulator:
             else:
                 return False, "❌ *Неверно, попробуйте еще раз!*"
 
-        except (ValueError, TypeError) as e:
-            # Если не удалось преобразовать в число, сравниваем как строки
+        except (ValueError, TypeError):
             if str(ответ_пользователя).strip().lower() == str(self.current_task["answer"]).strip().lower():
-                # Генерируем новую задачу
                 new_task = self.generator.generate_random_task()
                 self.current_task = new_task
 
