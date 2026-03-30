@@ -95,8 +95,8 @@ def show_simulator_menu(vk, user_id):
     """Отображает меню тренажера"""
     keyboard = VkKeyboard()
 
-    keyboard.add_button(label:'🟢 Легкий', color=VkKeyboardColor.POSITIVE)
-    keyboard.add_button(label:'🟡 Средний', color=VkKeyboardColor.PRIMARY)
+    keyboard.add_button('🟢 Легкий', color=VkKeyboardColor.POSITIVE)
+    keyboard.add_button('🟡 Средний', color=VkKeyboardColor.PRIMARY)
     keyboard.add_line()
     keyboard.add_button('🔴 Сложный', color=VkKeyboardColor.NEGATIVE)
     keyboard.add_button('🎲 Случайно', color=VkKeyboardColor.PRIMARY)
